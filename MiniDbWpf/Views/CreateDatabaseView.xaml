@@ -4,68 +4,128 @@
              xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes">
     <ScrollViewer>
         <StackPanel>
-            <TextBlock Text="Create Database" Style="{StaticResource PageTitleStyle}"/>
+            <TextBlock Text="MiniDB Creation Wizard" Style="{StaticResource PageTitleStyle}"/>
 
             <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="12"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="12"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="12"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="12"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Source SQL Server" FontSize="16" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,16"/>
 
-                    <TextBlock Text="Source SQL Server" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
-                    <TextBox Grid.Row="1" Text="{Binding SourceServer}" Background="#1E1E32" Foreground="White"
-                             BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10" FontSize="14"
-                             Height="40"/>
-
-                    <TextBlock Grid.Row="2" Text="Source Database" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
-                    <TextBox Grid.Row="3" Text="{Binding SourceDatabase}" Background="#1E1E32" Foreground="White"
-                             BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10" FontSize="14"
-                             Height="40"/>
-
-                    <TextBlock Grid.Row="4" Text="Destination" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
-                    <TextBox Grid.Row="5" Text="{Binding DestinationServer}" Background="#1E1E32" Foreground="#888"
-                             BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10" FontSize="14"
-                             Height="40" IsReadOnly="True"/>
-
-                    <TextBlock Grid.Row="6" Text="SQL Script" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
-                    <Grid Grid.Row="7">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/><RowDefinition Height="10"/>
+                            <RowDefinition Height="auto"/><RowDefinition Height="10"/>
+                            <RowDefinition Height="auto"/><RowDefinition Height="10"/>
+                            <RowDefinition Height="auto"/><RowDefinition Height="10"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="10"/>
-                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Text="{Binding ScriptPath}" Background="#1E1E32" Foreground="White"
-                                 BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10" FontSize="14"
-                                 Height="40" IsReadOnly="True"/>
-                        <Button Grid.Column="2" Content="Browse" Background="#3A3A5C" Foreground="White"
-                                BorderThickness="0" Height="40" Cursor="Hand"
-                                material:ButtonAssist.CornerRadius="8" Padding="16,0"
-                                Command="{Binding BrowseScriptCommand}"/>
-                    </Grid>
 
-                    <StackPanel Grid.Row="8" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button Content="Validate" Background="#7C3AED" Foreground="White"
-                                BorderThickness="0" Height="40" Cursor="Hand"
-                                material:ButtonAssist.CornerRadius="8" Padding="24,0"
-                                Command="{Binding ValidateCommand}"/>
-                        <Button Content="Create Database" Background="#00C853" Foreground="White"
-                                BorderThickness="0" Height="40" Cursor="Hand" Margin="10,0,0,0"
-                                material:ButtonAssist.CornerRadius="8" Padding="24,0"
-                                Command="{Binding CreateDatabaseCommand}"
-                                IsEnabled="{Binding IsValidated}"/>
-                    </StackPanel>
-                </Grid>
+                        <StackPanel>
+                            <TextBlock Text="Server Name" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding SourceServer}" Background="#1E1E32" Foreground="White"
+                                     BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10" FontSize="14"
+                                     Height="40"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Database Name" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding SourceDatabase}" Background="#1E1E32" Foreground="White"
+                                     BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10" FontSize="14"
+                                     Height="40"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2">
+                            <TextBlock Text="Username (SQL Auth)" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding SourceUser}" Background="#1E1E32" Foreground="White"
+                                     BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10" FontSize="14"
+                                     Height="40"
+                                     IsEnabled="{Binding UseSqlAuth}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="2">
+                            <TextBlock Text="Password" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                            <PasswordBox x:Name="pwSource" Background="#1E1E32" Foreground="White"
+                                          BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10"
+                                          FontSize="14" Height="40"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
             </Border>
 
-            <TextBlock Text="{Binding StatusText}" Foreground="#69DB7C" FontSize="13" Margin="0,8,0,0"/>
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Destination (Local SQL Server)" FontSize="16" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,16"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Server" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding DestinationServer}" Background="#1E1E32" Foreground="White"
+                                     BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10" FontSize="14"
+                                     Height="40"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Database Name" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding DestinationDatabase}" Background="#1E1E32" Foreground="White"
+                                     BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10" FontSize="14"
+                                     Height="40"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Date Range &amp; Options" FontSize="16" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,16"/>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/><RowDefinition Height="10"/>
+                            <RowDefinition Height="auto"/><RowDefinition Height="10"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel>
+                            <TextBlock Text="From Date" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                            <DatePicker SelectedDate="{Binding FromDate}" Background="#1E1E32" Foreground="White"
+                                        BorderBrush="#3A3A5C" Height="40" FontSize="14"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="To Date" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                            <DatePicker SelectedDate="{Binding ToDate}" Background="#1E1E32" Foreground="White"
+                                        BorderBrush="#3A3A5C" Height="40" FontSize="14"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="4" VerticalAlignment="End" Margin="12,0,0,0">
+                            <CheckBox IsChecked="{Binding IsDebug}" Foreground="#CCC" FontSize="13"
+                                      Content="Debug (preview only)"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                <Button Content="1. Validate Connections" Background="#7C3AED" Foreground="White"
+                        BorderThickness="0" Height="40" Cursor="Hand" Padding="20,0"
+                        material:ButtonAssist.CornerRadius="8"
+                        Command="{Binding ValidateCommand}"/>
+                <Button Content="2. Create MiniDB" Background="#00C853" Foreground="White"
+                        BorderThickness="0" Height="40" Cursor="Hand" Padding="20,0" Margin="10,0,0,0"
+                        material:ButtonAssist.CornerRadius="8"
+                        Command="{Binding CreateDatabaseCommand}"
+                        IsEnabled="{Binding IsValidated}"/>
+            </StackPanel>
+
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,8">
+                <StackPanel>
+                    <TextBlock Text="{Binding StatusText}" Foreground="#69DB7C" FontSize="13"/>
+                    <TextBlock Text="{Binding ValidationMessage}" Foreground="#AAA" FontSize="12" Margin="0,4,0,0"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

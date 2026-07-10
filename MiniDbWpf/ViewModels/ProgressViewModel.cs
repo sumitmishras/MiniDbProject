@@ -19,6 +19,7 @@ public partial class ProgressViewModel : ObservableObject
     [ObservableProperty] private bool _isRunning;
     [ObservableProperty] private bool _isCompleted;
     [ObservableProperty] private bool _isCancelled;
+    [ObservableProperty] private string _resultDetails = string.Empty;
     public ObservableCollection<string> Logs { get; } = [];
 
     public ProgressViewModel(IDatabaseService database, ILoggerService logger)
@@ -26,7 +27,10 @@ public partial class ProgressViewModel : ObservableObject
         _database = database; _logger = logger;
     }
 
-    public async Task StartAsync(string server, string database, string scriptPath)
+    public async Task StartAsync(string sourceServer, string sourceDatabase,
+        string? sourceUser, string? sourcePassword,
+        string destinationServer, string destinationDatabase,
+        DateTime fromDate, DateTime toDate, bool debug)
     {
         IsRunning = true; IsCompleted = false; IsCancelled = false;
         _cts = new CancellationTokenSource();
@@ -36,25 +40,33 @@ public partial class ProgressViewModel : ObservableObject
         {
             var span = DateTime.Now - startTime;
             Elapsed = span.ToString(@"hh\:mm\:ss");
-            var remaining = Percent < 95 ? (int)((100.0 - Percent) / (Percent + 1) * span.TotalSeconds) : 0;
+            var remaining = Percent < 95
+                ? (int)((100.0 - Percent) / (Percent + 1) * span.TotalSeconds)
+                : 0;
             Eta = TimeSpan.FromSeconds(remaining).ToString(@"hh\:mm\:ss");
         };
 
         try
         {
             timer.Start();
-            var progress = new Progress<(int Percent, string Stage, string Task)>(p =>
+            var progress = new Progress<(int Percent, string Stage, string Task, string Detail)>(p =>
             {
                 Percent = p.Percent;
                 Stage = p.Stage;
                 CurrentTask = p.Task;
                 var ts = DateTime.Now.ToString("HH:mm:ss");
                 Logs.Insert(0, $"[{ts}] {p.Stage}: {p.Task}");
+                if (!string.IsNullOrEmpty(p.Detail))
+                    ResultDetails = p.Detail;
             });
 
-            await _database.CreateDatabaseAsync(server, database, scriptPath, progress, _cts.Token);
+            await _database.CreateDatabaseAsync(
+                sourceServer, sourceDatabase, sourceUser, sourcePassword,
+                destinationServer, destinationDatabase,
+                fromDate, toDate, debug,
+                progress, _cts.Token);
             IsCompleted = true;
-            await _logger.LogSuccess($"Database '{database}' created on {server}.");
+            await _logger.LogSuccess($"Database '{destinationDatabase}' created on {destinationServer}.");
         }
         catch (OperationCanceledException)
         {
@@ -76,8 +88,5 @@ public partial class ProgressViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Cancel()
-    {
-        _cts?.Cancel();
-    }
+    private void Cancel() => _cts?.Cancel();
 }

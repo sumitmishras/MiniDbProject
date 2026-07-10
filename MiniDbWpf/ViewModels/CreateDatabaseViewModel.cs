@@ -11,13 +11,23 @@ public partial class CreateDatabaseViewModel : ObservableObject
     private readonly IDatabaseService _database;
     private readonly ILoggerService _logger;
 
-    [ObservableProperty] private string _sourceServer = "DEV_SERVER_01";
-    [ObservableProperty] private string _sourceDatabase = "HRMS";
-    [ObservableProperty] private string _destinationServer = "LocalDB (Fixed)";
-    [ObservableProperty] private string _scriptPath = string.Empty;
-    [ObservableProperty] private string _statusText = string.Empty;
+    [ObservableProperty] private string _sourceServer = "";
+    [ObservableProperty] private string _sourceDatabase = "";
+    [ObservableProperty] private string _sourceUser = "sa";
+    [ObservableProperty] private string _sourcePassword = "";
+    [ObservableProperty] private bool _useSqlAuth = true;
+
+    [ObservableProperty] private string _destinationServer = ".\\LOCALDB";
+    [ObservableProperty] private string _destinationDatabase = "MiniDB";
+
+    [ObservableProperty] private DateTime _fromDate = DateTime.Today.AddDays(-7);
+    [ObservableProperty] private DateTime _toDate = DateTime.Today;
+    [ObservableProperty] private bool _isDebug = true;
+
+    [ObservableProperty] private string _statusText = "";
     [ObservableProperty] private bool _isValidated;
     [ObservableProperty] private bool _isCreating;
+    [ObservableProperty] private string _validationMessage = "";
 
     public CreateDatabaseViewModel(IDatabaseService database, ILoggerService logger)
     {
@@ -25,41 +35,38 @@ public partial class CreateDatabaseViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task BrowseScript()
-    {
-        var dialog = new Microsoft.Win32.OpenFileDialog
-        {
-            Filter = "SQL Files (*.sql)|*.sql|All Files (*.*)|*.*",
-            Title = "Select SQL Script"
-        };
-        if (dialog.ShowDialog() == true)
-            ScriptPath = dialog.FileName;
-    }
-
-    [RelayCommand]
     private async Task Validate()
     {
-        StatusText = "Validating...";
-        var connOk = await _database.ValidateConnectionAsync(SourceServer, SourceDatabase);
-        if (!connOk)
+        StatusText = "Validating connections...";
+        ValidationMessage = "";
+        IsValidated = false;
+
+        var sourceResult = await _database.ValidateConnectionAsync(
+            SourceServer, SourceDatabase,
+            UseSqlAuth ? SourceUser : null,
+            UseSqlAuth ? SourcePassword : null);
+
+        if (!sourceResult.Success)
         {
-            StatusText = "Connection validation failed!";
+            StatusText = "Source connection failed!";
+            ValidationMessage = sourceResult.Message;
             return;
         }
 
-        if (!string.IsNullOrEmpty(ScriptPath))
+        var destResult = await _database.ValidateConnectionAsync(
+            DestinationServer, "master", null, null);
+
+        if (!destResult.Success)
         {
-            var scriptOk = await _database.ValidateScriptAsync(ScriptPath);
-            if (!scriptOk)
-            {
-                StatusText = "Script validation failed!";
-                return;
-            }
+            StatusText = "Destination connection failed!";
+            ValidationMessage = destResult.Message;
+            return;
         }
 
         IsValidated = true;
-        StatusText = "Validation passed. Ready to create.";
-        await _logger.LogSuccess("Database validation passed.");
+        StatusText = "All connections validated.";
+        ValidationMessage = "Source and destination OK.";
+        await _logger.LogSuccess("Database connections validated.");
     }
 
     [RelayCommand]
@@ -67,13 +74,18 @@ public partial class CreateDatabaseViewModel : ObservableObject
     {
         if (!IsValidated) return;
         IsCreating = true;
-        StatusText = "Creating database...";
+        StatusText = "Starting MiniDB creation...";
 
-        var dialog = new ProgressDialog(_database, _logger, SourceServer, SourceDatabase, ScriptPath);
+        var dialog = new ProgressDialog(_database, _logger,
+            SourceServer, SourceDatabase,
+            UseSqlAuth ? SourceUser : null,
+            UseSqlAuth ? SourcePassword : null,
+            DestinationServer, DestinationDatabase,
+            FromDate, ToDate, IsDebug);
         dialog.ShowDialog();
 
         IsCreating = false;
         IsValidated = false;
-        StatusText = "Database creation completed.";
+        StatusText = "MiniDB creation completed.";
     }
 }
