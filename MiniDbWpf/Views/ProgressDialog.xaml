@@ -1,0 +1,106 @@
+<Window x:Class="MiniDbWpf.Views.ProgressDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Creating Database" Height="480" Width="520"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None" AllowsTransparency="True"
+        Background="Transparent">
+    <Border CornerRadius="16" Background="#1A1A2E">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="24" Opacity="0.4" ShadowDepth="4" Color="Black"/>
+        </Border.Effect>
+        <Grid Margin="28,24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel>
+                <TextBlock Text="Creating Database" FontSize="20" FontWeight="Bold"
+                           Foreground="White" TextAlignment="Center"/>
+                <TextBlock Text="{Binding Stage}" FontSize="14" Foreground="#AAA"
+                           TextAlignment="Center" Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <!-- Progress Bar -->
+            <Border Grid.Row="1" Margin="0,24,0,8">
+                <ProgressBar Value="{Binding Percent}" Minimum="0" Maximum="100"
+                             Height="8" BorderThickness="0"
+                             Foreground="#7C3AED" Background="#2D2D44"/>
+            </Border>
+
+            <Grid Grid.Row="2" Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Percent, StringFormat={}{0}%}" FontSize="24"
+                           FontWeight="Bold" Foreground="#7C3AED"/>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Elapsed: " FontSize="12" Foreground="#888"/>
+                    <TextBlock Text="{Binding Elapsed}" FontSize="12" Foreground="#CCC"/>
+                    <TextBlock Text="  ETA: " FontSize="12" Foreground="#888" Margin="12,0,0,0"/>
+                    <TextBlock Text="{Binding Eta}" FontSize="12" Foreground="#CCC"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Current Task -->
+            <Border Grid.Row="3" Background="#252540" Padding="14,10" Margin="0,0,0,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <material:PackIcon Kind="DatabaseSync" Width="20" Height="20"
+                                       Foreground="#7C3AED" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Text="{Binding CurrentTask}" Foreground="#CCC"
+                               FontSize="13" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- Logs -->
+            <Border Grid.Row="4" Background="#151525" Padding="12" Margin="0,0,0,12"
+                    MinHeight="140">
+                <ItemsControl ItemsSource="{Binding Logs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Foreground="#AAA" FontSize="11"
+                                       FontFamily="Consolas" Margin="0,0,0,2"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
+
+            <!-- Cancel / Close -->
+            <Button x:Name="btnAction" Height="40" FontSize="14" FontWeight="SemiBold"
+                    material:ButtonAssist.CornerRadius="8" Cursor="Hand"
+                    Click="BtnAction_Click">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Content" Value="Cancel"/>
+                        <Setter Property="Background" Value="#FF5252"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                <Setter Property="Content" Value="Close"/>
+                                <Setter Property="Background" Value="#00C853"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsCancelled}" Value="True">
+                                <Setter Property="Content" Value="Close"/>
+                                <Setter Property="Background" Value="#FF6D00"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
+    </Border>
+</Window>

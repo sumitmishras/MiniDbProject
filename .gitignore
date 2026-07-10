@@ -1,0 +1,26 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.sln.docstates
+*.userprefs
+*.csproj.user
+packages/
+*.nupkg
+**/[Rr]elease*/
+**/[Dd]ebug/
+
+## VS
+.vs/
+*.sln.ide/
+
+## Logs
+Logs/
+*.log
+
+## IDE
+.idea/
+*.swp
+*~
+.DS_Store

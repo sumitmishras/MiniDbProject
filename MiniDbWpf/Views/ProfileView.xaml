@@ -1,0 +1,143 @@
+<UserControl x:Class="MiniDbWpf.Views.ProfileView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <ScrollViewer>
+        <StackPanel>
+            <TextBlock Text="Profile" Style="{StaticResource PageTitleStyle}"/>
+
+            <!-- Profile Info -->
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Profile Information" FontSize="16" FontWeight="SemiBold"
+                               Foreground="White" Margin="0,0,0,16"/>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="12"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="12"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="12"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="12"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel>
+                            <TextBlock Text="Username" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding Username}" IsReadOnly="True" Background="#1E1E32"
+                                     Foreground="#888" BorderBrush="#3A3A5C" BorderThickness="1"
+                                     Padding="12,10" FontSize="14" Height="40"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Role" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding Role}" IsReadOnly="True" Background="#1E1E32"
+                                     Foreground="#888" BorderBrush="#3A3A5C" BorderThickness="1"
+                                     Padding="12,10" FontSize="14" Height="40"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2">
+                            <TextBlock Text="Full Name" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding FullName}" Background="#1E1E32" Foreground="White"
+                                     BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10"
+                                     FontSize="14" Height="40"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="2">
+                            <TextBlock Text="Email" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding Email}" Background="#1E1E32" Foreground="White"
+                                     BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10"
+                                     FontSize="14" Height="40"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="4" Grid.ColumnSpan="3">
+                            <Button Content="Save Profile" Background="#7C3AED" Foreground="White"
+                                    BorderThickness="0" Height="40" Cursor="Hand" Width="160"
+                                    HorizontalAlignment="Left" Command="{Binding SaveProfileCommand}"
+                                    material:ButtonAssist.CornerRadius="8"/>
+                            <TextBlock Text="{Binding ProfileStatus}" Foreground="#69DB7C" FontSize="12"
+                                       Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Change Password -->
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Change Password" FontSize="16" FontWeight="SemiBold"
+                               Foreground="White" Margin="0,0,0,16"/>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="12"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="12"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="12"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Current Password" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                        <PasswordBox Grid.Row="1" x:Name="pwCurrent" Background="#1E1E32" Foreground="White"
+                                      BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10" FontSize="14"
+                                      Height="40"/>
+
+                        <TextBlock Grid.Row="2" Text="New Password" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                        <PasswordBox Grid.Row="3" x:Name="pwNew" Background="#1E1E32" Foreground="White"
+                                      BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10" FontSize="14"
+                                      Height="40"/>
+
+                        <TextBlock Grid.Row="4" Text="Confirm Password" Foreground="#AAA" FontSize="12" Margin="0,0,0,4"/>
+                        <PasswordBox Grid.Row="5" x:Name="pwConfirm" Background="#1E1E32" Foreground="White"
+                                      BorderBrush="#3A3A5C" BorderThickness="1" Padding="12,10" FontSize="14"
+                                      Height="40"/>
+                    </Grid>
+
+                    <Button Content="Change Password" Background="#FF6D00" Foreground="White"
+                            BorderThickness="0" Height="40" Cursor="Hand" Width="180"
+                            HorizontalAlignment="Left" Margin="0,16,0,0"
+                            material:ButtonAssist.CornerRadius="8"
+                            Click="BtnChangePassword_Click"/>
+                    <TextBlock Text="{Binding PasswordStatus}" Foreground="#69DB7C" FontSize="12" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- MFA Settings -->
+            <Border Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <TextBlock Text="MFA Settings" FontSize="16" FontWeight="SemiBold"
+                               Foreground="White" Margin="0,0,0,16"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Multi-Factor Authentication" FontSize="14" Foreground="#CCC"
+                                   VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                            <Button Content="Enable MFA" Background="#7C3AED" Foreground="White"
+                                    BorderThickness="0" Height="36" Cursor="Hand" Padding="16,0"
+                                    material:ButtonAssist.CornerRadius="8"
+                                    Command="{Binding SetupMfaCommand}"/>
+                            <Button Content="Disable MFA" Background="#FF5252" Foreground="White"
+                                    BorderThickness="0" Height="36" Cursor="Hand" Padding="16,0"
+                                    Margin="8,0,0,0" material:ButtonAssist.CornerRadius="8"
+                                    Command="{Binding DisableMfaCommand}"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="{Binding MfaStatus}" Foreground="#69DB7C" FontSize="12" Margin="0,8,0,0"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
