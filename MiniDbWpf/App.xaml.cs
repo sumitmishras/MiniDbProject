@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using MiniDbWpf.Services;
 
@@ -11,29 +12,40 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-
-        DispatcherUnhandledException += (_, args) =>
+        try
         {
-            MessageBox.Show($"Error: {args.Exception.Message}", "Application Error",
-                MessageBoxButton.OK, MessageBoxImage.Error);
-            args.Handled = true;
-        };
+            DispatcherUnhandledException += (_, args) =>
+            {
+                var ex = args.Exception;
+                var msg = $"Error: {ex.Message}\n\nInner: {ex.InnerException?.Message}\n\nStack:\n{ex.StackTrace}";
+                try { File.WriteAllText(@"C:\Temp_MiniDB\crash.txt", msg); } catch { }
+                MessageBox.Show(msg, "Application Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                args.Handled = true;
+            };
 
-        AppDomain.CurrentDomain.UnhandledException += (_, args) =>
+            AppDomain.CurrentDomain.UnhandledException += (_, args) =>
+            {
+                var ex = args.ExceptionObject as Exception;
+                var msg = $"Fatal: {ex?.Message}\n\nInner: {ex?.InnerException?.Message}\n\nStack:\n{ex?.StackTrace}";
+                try { File.WriteAllText(@"C:\Temp_MiniDB\crash_fatal.txt", msg); } catch { }
+                MessageBox.Show(msg, "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            };
+
+            var services = new ServiceCollection();
+            ConfigureServices(services);
+            ServiceProvider = services.BuildServiceProvider();
+
+            var login = new Views.LoginWindow(
+                ServiceProvider.GetRequiredService<IAuthenticationService>(),
+                ServiceProvider.GetRequiredService<ILoggerService>());
+            login.Show();
+        }
+        catch (Exception ex)
         {
-            var ex = args.ExceptionObject as Exception;
-            MessageBox.Show($"Fatal: {ex?.Message}", "Fatal Error",
-                MessageBoxButton.OK, MessageBoxImage.Error);
-        };
-
-        var services = new ServiceCollection();
-        ConfigureServices(services);
-        ServiceProvider = services.BuildServiceProvider();
-
-        var login = new Views.LoginWindow(
-            ServiceProvider.GetRequiredService<IAuthenticationService>(),
-            ServiceProvider.GetRequiredService<ILoggerService>());
-        login.Show();
+            var msg = $"Startup error: {ex.Message}\n\nInner: {ex.InnerException?.Message}\n\nStack:\n{ex.StackTrace}";
+            try { File.WriteAllText(@"C:\Temp_MiniDB\crash.txt", msg); } catch { }
+            MessageBox.Show(msg, "Fatal Startup Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private static void ConfigureServices(IServiceCollection services)

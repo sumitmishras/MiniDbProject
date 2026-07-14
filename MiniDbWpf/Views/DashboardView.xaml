@@ -1,7 +1,7 @@
 <UserControl x:Class="MiniDbWpf.Views.DashboardView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes">
+             >
     <ScrollViewer>
         <StackPanel>
             <TextBlock Text="{Binding WelcomeMessage}" FontSize="15" Foreground="#AAA" Margin="0,0,0,24"/>
@@ -17,9 +17,9 @@
                     <DataTemplate>
                         <Border Style="{StaticResource CardBorder}" Margin="6">
                             <StackPanel>
-                                <material:PackIcon Kind="{Binding IconKind}" Width="32" Height="32"
+                                <TextBlock Text="📊" FontSize="28"
                                                    Foreground="{Binding IconBrush}"
-                                                   Margin="0,0,0,12"/>
+                                                   Margin="0,0,0,12" HorizontalAlignment="Center"/>
                                 <TextBlock Text="{Binding Value}" FontSize="28" FontWeight="Bold"
                                            Foreground="White"/>
                                 <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="SemiBold"
@@ -62,15 +62,15 @@
                         <Button Content="New Database" Background="#7C3AED" Foreground="White"
                                 BorderThickness="0" Height="40"
                                 Cursor="Hand" Margin="0,0,0,10"
-                                material:ButtonAssist.CornerRadius="8"/>
+                                 />
                         <Button Content="View Logs" Background="#252540" Foreground="White"
                                 BorderThickness="0" Height="40"
                                 Cursor="Hand" Margin="0,0,0,10"
-                                material:ButtonAssist.CornerRadius="8"/>
+                                />
                         <Button Content="Refresh" Background="#252540" Foreground="White"
                                 BorderThickness="0" Height="40"
                                 Cursor="Hand" Command="{Binding RefreshCommand}"
-                                material:ButtonAssist.CornerRadius="8"/>
+                                />
                     </StackPanel>
                 </Border>
             </Grid>

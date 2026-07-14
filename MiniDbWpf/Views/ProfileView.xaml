@@ -1,7 +1,7 @@
 <UserControl x:Class="MiniDbWpf.Views.ProfileView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes">
+             >
     <ScrollViewer>
         <StackPanel>
             <TextBlock Text="Profile" Style="{StaticResource PageTitleStyle}"/>
@@ -59,8 +59,7 @@
                         <StackPanel Grid.Row="4" Grid.ColumnSpan="3">
                             <Button Content="Save Profile" Background="#7C3AED" Foreground="White"
                                     BorderThickness="0" Height="40" Cursor="Hand" Width="160"
-                                    HorizontalAlignment="Left" Command="{Binding SaveProfileCommand}"
-                                    material:ButtonAssist.CornerRadius="8"/>
+                                    HorizontalAlignment="Left" Command="{Binding SaveProfileCommand}"/>
                             <TextBlock Text="{Binding ProfileStatus}" Foreground="#69DB7C" FontSize="12"
                                        Margin="0,8,0,0"/>
                         </StackPanel>
@@ -103,7 +102,6 @@
                     <Button Content="Change Password" Background="#FF6D00" Foreground="White"
                             BorderThickness="0" Height="40" Cursor="Hand" Width="180"
                             HorizontalAlignment="Left" Margin="0,16,0,0"
-                            material:ButtonAssist.CornerRadius="8"
                             Click="BtnChangePassword_Click"/>
                     <TextBlock Text="{Binding PasswordStatus}" Foreground="#69DB7C" FontSize="12" Margin="0,8,0,0"/>
                 </StackPanel>
@@ -126,11 +124,10 @@
                         <StackPanel Grid.Column="2" Orientation="Horizontal">
                             <Button Content="Enable MFA" Background="#7C3AED" Foreground="White"
                                     BorderThickness="0" Height="36" Cursor="Hand" Padding="16,0"
-                                    material:ButtonAssist.CornerRadius="8"
                                     Command="{Binding SetupMfaCommand}"/>
                             <Button Content="Disable MFA" Background="#FF5252" Foreground="White"
                                     BorderThickness="0" Height="36" Cursor="Hand" Padding="16,0"
-                                    Margin="8,0,0,0" material:ButtonAssist.CornerRadius="8"
+                                    Margin="8,0,0,0"
                                     Command="{Binding DisableMfaCommand}"/>
                         </StackPanel>
                     </Grid>

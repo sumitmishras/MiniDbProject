@@ -1,7 +1,6 @@
 <Window x:Class="MiniDbWpf.Views.ProgressDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Creating Database" Height="520" Width="560"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None" AllowsTransparency="True"
@@ -57,7 +56,7 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <material:PackIcon Kind="DatabaseSync" Width="20" Height="20"
+                    <TextBlock Text="🗄️" FontSize="18"
                                        Foreground="#7C3AED" VerticalAlignment="Center"/>
                     <TextBlock Grid.Column="1" Text="{Binding CurrentTask}" Foreground="#CCC"
                                FontSize="13" Margin="10,0,0,0" VerticalAlignment="Center"/>
@@ -89,7 +88,7 @@
             </Border>
 
             <Button x:Name="btnAction" Grid.Row="7" Height="40" FontSize="14" FontWeight="SemiBold"
-                    material:ButtonAssist.CornerRadius="8" Cursor="Hand"
+                    Cursor="Hand"
                     Click="BtnAction_Click">
                 <Button.Style>
                     <Style TargetType="Button">

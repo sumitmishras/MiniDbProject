@@ -1,7 +1,6 @@
 <UserControl x:Class="MiniDbWpf.Views.LogsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:conv="clr-namespace:MiniDbWpf.Converters">
     <UserControl.Resources>
         <conv:LogLevelToColorConverter x:Key="LogLevelColor"/>
@@ -36,12 +35,11 @@
 
                 <StackPanel Grid.Column="4" Orientation="Horizontal">
                     <Button Content="Export" Background="#3A3A5C" Foreground="White"
-                            BorderThickness="0" Height="36" Cursor="Hand" Padding="16,0"
-                            material:ButtonAssist.CornerRadius="8" Margin="0,0,8,0"
-                            Command="{Binding ExportCommand}"/>
+                             BorderThickness="0" Height="36" Cursor="Hand" Padding="16,0"
+                             Margin="0,0,8,0"
+                             Command="{Binding ExportCommand}"/>
                     <Button Content="Refresh" Background="#7C3AED" Foreground="White"
                             BorderThickness="0" Height="36" Cursor="Hand" Padding="16,0"
-                            material:ButtonAssist.CornerRadius="8"
                             Command="{Binding RefreshCommand}"/>
                 </StackPanel>
             </Grid>

@@ -1,7 +1,6 @@
 <Window x:Class="MiniDbWpf.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:vm="clr-namespace:MiniDbWpf.ViewModels"
         xmlns:views="clr-namespace:MiniDbWpf.Views"
         Title="Mini Database Creator" Height="780" Width="1200"
@@ -75,9 +74,9 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <material:PackIcon Kind="{Binding IconKind}"
-                                                       Width="22" Height="22"
-                                                       Foreground="{DynamicResource MaterialDesignBody}"/>
+                                    <TextBlock Text="•" FontSize="22"
+                                                       Foreground="{DynamicResource MaterialDesignBody}"
+                                                       VerticalAlignment="Center"/>
 
                                     <TextBlock Grid.Column="1" Text="{Binding Title}"
                                                Margin="12,0,0,0" VerticalAlignment="Center"
@@ -112,7 +111,7 @@
                         <Button Grid.Column="2" Style="{StaticResource TopBarButton}"
                                 Command="{Binding LogoutCommand}"
                                 ToolTip="Logout">
-                            <material:PackIcon Kind="Logout" Width="20" Height="20" Foreground="#FF5252"/>
+                            <TextBlock Text="✕" FontSize="18" Foreground="#FF5252" VerticalAlignment="Center"/>
                         </Button>
                     </Grid>
                 </Border>
@@ -142,13 +141,13 @@
                         <Button Style="{StaticResource TopBarButton}"
                                 Command="{Binding ToggleThemeCommand}"
                                 ToolTip="Toggle Theme" Margin="0,0,4,0">
-                            <material:PackIcon Kind="ThemeLightDark" Width="20" Height="20"
-                                               Foreground="{DynamicResource MaterialDesignBody}"/>
+                            <TextBlock Text="🌙" FontSize="18"
+                                               Foreground="{DynamicResource MaterialDesignBody}" VerticalAlignment="Center"/>
                         </Button>
                         <Button Style="{StaticResource TopBarButton}" ToolTip="Notifications"
                                 Margin="0,0,4,0">
-                            <material:PackIcon Kind="Bell" Width="20" Height="20"
-                                               Foreground="{DynamicResource MaterialDesignBody}"/>
+                            <TextBlock Text="🔔" FontSize="16"
+                                               Foreground="{DynamicResource MaterialDesignBody}" VerticalAlignment="Center"/>
                         </Button>
 
                         <Border Width="1" Height="24" Background="#3A3A5C" Margin="8,0"/>
@@ -158,7 +157,7 @@
                         <Button Style="{StaticResource TopBarButton}"
                                 Command="{Binding LogoutCommand}"
                                 ToolTip="Logout" Background="#3A1A1A">
-                            <material:PackIcon Kind="Logout" Width="18" Height="18" Foreground="#FF5252"/>
+                            <TextBlock Text="✕" FontSize="16" Foreground="#FF5252" VerticalAlignment="Center"/>
                         </Button>
                     </StackPanel>
                 </Grid>

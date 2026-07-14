@@ -1,3 +1,4 @@
+using System.IO;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using MiniDbWpf.Services;
@@ -50,13 +51,22 @@ public partial class LoginWindow : Window
         if (user != null)
         {
             await _logger.LogSuccess($"User '{username}' logged in.");
-            var mainWindow = new MainWindow(
-                _auth,
-                _logger,
-                App.ServiceProvider.GetRequiredService<IProfileService>(),
-                App.ServiceProvider.GetRequiredService<IDatabaseService>());
-            mainWindow.Show();
-            Close();
+            try
+            {
+                var mainWindow = new MainWindow(
+                    _auth,
+                    _logger,
+                    App.ServiceProvider.GetRequiredService<IProfileService>(),
+                    App.ServiceProvider.GetRequiredService<IDatabaseService>());
+                mainWindow.Show();
+                Close();
+            }
+            catch (Exception ex)
+            {
+                var msg = $"MainWindow error: {ex.Message}\n\nInner: {ex.InnerException?.Message}\n\nStack:\n{ex.StackTrace}";
+                File.WriteAllText(@"C:\Temp_MiniDB\crash.txt", msg);
+                ShowError(msg);
+            }
         }
         else
         {
